@@ -1,10 +1,9 @@
-import {DragTarget} from "../models/drag-drop.js";
-import {autobind} from "../decorators/autobind.js";
-import {Project} from "../models/project.js";
-import {Component} from "./base-component.js";
-import {ProjectStatus} from "../models/project.js";
-import {projectState} from "../state/project-state.js";
-import {ProjectItem} from "./project-item.js";
+import {DragTarget} from "../models/drag-drop";
+import {autobind} from "../decorators/autobind";
+import {Project, ProjectStatus} from "../models/project";
+import {Component} from "./base-component";
+import {projectState} from "../state/project-state";
+import {ProjectItem} from "./project-item";
 
 // ProjectList Class
 export class ProjectList extends Component<HTMLDivElement, HTMLElement>
@@ -49,20 +48,18 @@ export class ProjectList extends Component<HTMLDivElement, HTMLElement>
         this.element.addEventListener('drop', this.dropHandler);
 
         projectState.addListener((projects: Project[]) => {
-            const relevantProjects = projects.filter(prj => {
+            this.assignedProjects = projects.filter(prj => {
                 if (this.type === 'active') {
                     return prj.status === ProjectStatus.Active;
                 }
                 return prj.status === ProjectStatus.Finished;
             });
-            this.assignedProjects = relevantProjects;
             this.renderProjects();
         });
     }
 
     renderContent() {
-        const listId = `${this.type}-projects-list`;
-        this.element.querySelector('ul')!.id = listId;
+        this.element.querySelector('ul')!.id = `${this.type}-projects-list`;
         this.element.querySelector('h2')!.textContent =
             this.type.toUpperCase() + ' PROJECTS';
     }
